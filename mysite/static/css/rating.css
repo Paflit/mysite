@@ -1,0 +1,99 @@
+.table-container {
+    width: 70%;
+    height: 500px; /* Высота контейнера таблицы, который будет прокручиваться */
+    overflow-y: auto; /* Разрешить прокрутку по вертикали */
+    margin: 0 auto; /* Автоматическое выравнивание по центру по горизонтали */
+
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+td, th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.container {
+    text-align: center;
+}
+
+form {
+    font-size: 20px;
+}
+
+
+input{
+width: 300px;
+    height: 40px;
+    font-size: 16px;
+    margin-bottom: 10px;
+    padding: 5px; /* добавлено для улучшения внешнего вида */
+    box-sizing: border-box; /* учитывать padding в общей ширине элемента */
+    font-family: Arial, sans-serif;
+}
+textarea {
+    width: 300px;
+    height: 40px;
+    font-size: 16px;
+    margin-bottom: 10px;
+    padding: 5px; /* добавлено для улучшения внешнего вида */
+    box-sizing: border-box; /* учитывать padding в общей ширине элемента */
+    font-family: Arial, sans-serif;
+}
+
+.datalist-wrapper {
+  max-height: 100px; /* фиксированная высота */
+  overflow-y: auto; /* добавление вертикальной полосы прокрутки */
+  border: 1px solid #ccc; /* рамка для обертки */
+  border-radius: 4px; /* скругление углов */
+}
+
+/* Стили для поля ввода */
+#last_name {
+  width: 200px; /* Ширина поля ввода */
+}
+
+/* Стили для обертки списка */
+.datalist-wrapper {
+  max-height: 100px; /* фиксированная высота */
+  overflow-y: auto; /* добавление вертикальной полосы прокрутки */
+  border: 1px solid #ccc; /* рамка для обертки */
+  border-radius: 4px; /* скругление углов */
+}
+
+/* Стили для элементов списка */
+#last_names option {
+  padding: 5px; /* отступ вокруг каждого варианта */
+}
+
+/* Стили для скроллбара */
+.datalist-wrapper::-webkit-scrollbar {
+  width: 8px; /* ширина скроллбара */
+}
+
+.datalist-wrapper::-webkit-scrollbar-track {
+  background: #f1f1f1; /* цвет фона трека */
+}
+
+.datalist-wrapper::-webkit-scrollbar-thumb {
+  background: #888; /* цвет ползунка */
+  border-radius: 4px; /* скругление углов ползунка */
+}
+
+.datalist-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #555; /* цвет ползунка при наведении */
+}
+

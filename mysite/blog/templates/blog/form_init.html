@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Заполнение Заявки</title>
+<!--    <link href="../../static/css/rating.css" rel="stylesheet">-->
+    <style>
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .container label {
+            display: block;
+            margin-top: 10px;
+        }
+        .container input, .container textarea, .container datalist {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .container input[type="submit"] {
+            margin-top: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .container input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        .container input[type="submit"] {
+        margin-top: 20px;
+        background-color: #d32323; /* Цвет из изображения */
+        color: white;
+        border: none;
+        cursor: pointer;
+        }
+
+        .container input[type="submit"]:hover {
+        background-color: #b71c1c; /* Темный оттенок для эффекта наведения */
+        }
+        select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        color: #333;
+    </style>
+</head>
+<body>
+<h1><center>Заполните форму</center></h1>
+<div class="container">
+    <form method="post" action="/accept_init/" onsubmit="return validateForm()">
+    {% csrf_token %}
+        <label for="project">Проект:</label>
+    <input id="project" id="project" name="project" list="projects" required>
+    <datalist id="projects">
+        {% for project in projects %}
+        <option value="{{ project }}">
+            {% endfor %}
+    </datalist></input>
+
+    <label for="last_name">Фамилия:</label>
+    <input type="text" id="last_name" name="last_name" list="last_names" autocomplete="off" required>
+    <datalist id="last_names">
+        {% for last_name in last_names %}
+        <option value="{{ last_name }}">
+        {% endfor %}
+    </datalist>
+
+    <label for="first_name">Имя:</label>
+    <input type="text" id="first_name" name="first_name" list="first_names" required>
+    <datalist id="first_names">
+        {% for first_name in first_names %}
+        <option value="{{ first_name }}">
+        {% endfor %}
+    </datalist>
+
+    <label for="middle_name">Отчество:</label>
+    <input type="text" id="middle_name" name="middle_name" list="middle_names" required>
+    <datalist id="middle_names">
+        {% for middle_name in middle_names %}
+        <option value="{{ middle_name }}">
+        {% endfor %}
+    </datalist>
+
+
+    <label for="job_title">Должность:</label>
+<input type="text" id="job_title" name="job_title" list="job_titles" required>
+<datalist id="job_titles">
+    {% for title in job_titles %}
+    <option value="{{ title }}">
+    {% endfor %}
+</datalist>
+
+    <label for="department">Подразделение:</label>
+    <input type="text" id="department" name="department" list="departments" required>
+    <datalist id="departments">
+        {% for department in departments %}
+        <option value="{{ department }}">
+        {% endfor %}
+    </datalist>
+
+
+    <label for="role_in_project">Роль в проекте:</label>
+    <input type="text" id="role_in_project" name="role_in_project" list="role_in_project0" required>
+    <datalist id="role_in_project0">
+        <option>Лидер</option>
+        <option>Участник</option>
+        <option>Эксперт</option>
+        <option>Куратор</option>
+    </datalist>
+
+    <label for="init">Вы являетесь инициатором проекта</label>
+    <select id="init" name="init" required>
+        <option value="" disabled selected>Выберите...</option>
+        <option>Нет</option>
+        <option>Да</option>
+    </select>
+
+
+
+    <input type="submit" value="Отправить">
+
+</form>
+    <form action="{% url 'register_project' %}">
+        <input type="submit" value="Зарегестрировать проект (если его нет в списке)">
+    </form>
+
+</div>
+<script>
+    function validateForm() {
+        var departmentInput = document.getElementById('department').value.toLowerCase();
+        var departmentOptions = Array.from(document.getElementById('departments').getElementsByTagName('option'));
+        var departmentExists = departmentOptions.some(function(option) {
+            return option.value.toLowerCase() === departmentInput;
+        });
+
+        if (!departmentExists) {
+            alert('Подразделение не существует. Пожалуйста, выберите подразделение из списка.');
+            return false; // Отменить отправку формы
+        }
+
+        var jobTitleInput = document.getElementById('job_title').value.toLowerCase();
+        var jobTitleOptions = Array.from(document.getElementById('job_titles').getElementsByTagName('option'));
+        var jobTitleExists = jobTitleOptions.some(function(option) {
+            return option.value.toLowerCase() === jobTitleInput;
+        });
+
+        if (!jobTitleExists) {
+            alert('Должность не существует. Пожалуйста, выберите должность из списка.');
+            return false; // Отменить отправку формы
+        }
+
+        var roleInProjectInput = document.getElementById('role_in_project').value.toLowerCase();
+        var roleInProjectOptions = Array.from(document.getElementById('role_in_project0').getElementsByTagName('option'));
+        var roleInProjectExists = roleInProjectOptions.some(function(option) {
+            return option.value.toLowerCase() === roleInProjectInput;
+        });
+
+        if (!roleInProjectExists) {
+            alert('Роль в проекте не существует. Пожалуйста, выберите роль из списка.');
+            return false; // Отменить отправку формы
+        }
+
+        return true; // Продолжить отправку формы
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Рейтинг Новаторов</title>
+    <link href="../../static/css/rating.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff; /* Красный цвет */
+            font-size: 2em;
+        }
+
+        .search-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #search {
+            width: 300px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .table-container {
+            overflow-y: auto;
+            overflow-x: hidden;
+            max-height: 600px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            background-color: #fff;
+            position: relative;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0;
+        }
+
+        thead {
+            position: sticky;
+            top: -1px;
+            background-color: #007bff;
+            z-index: 1;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        @media (max-width: 600px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+
+            th {
+                display: none;
+            }
+
+            tr {
+                margin-bottom: 15px;
+                border: 1px solid #ddd;
+                padding: 10px;
+                box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+                position: relative;
+            }
+
+            .card-header {
+                background-color: #007bff;
+                color: white;
+                padding: 10px;
+                font-size: 16px;
+                font-weight: bold;
+                text-align: center;
+                width: calc(100% - 20px);
+                position: absolute;
+                top: 0;
+                left: 0;
+                border-top-left-radius: 5px;
+                border-top-right-radius: 5px;
+            }
+
+            td {
+                text-align: right;
+                padding-left: 50%;
+                position: relative;
+                padding-top: 10px; /* уменьшение отступа сверху */
+                padding-bottom: 10px; /* уменьшение отступа снизу */
+            }
+
+            td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 10px;
+                width: calc(50% - 20px);
+                font-weight: bold;
+                text-align: left;
+                white-space: nowrap;
+            }
+
+            .table-container {
+                max-height: none;
+            }
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .button-container input, .button-container button {
+            display: inline-block;
+            margin: 0 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+
+        .button-container input:hover, .button-container button:hover {
+            background-color: #cc0000; /* Темно-красный цвет */
+        }
+
+        .button-container form {
+            display: inline;
+        }
+
+        @media (max-width: 600px) {
+            .button-container form {
+                display: block;
+                margin-bottom: 10px; /* Добавить отступ между кнопками */
+            }
+            .button-container form:last-child {
+                margin-bottom: 0; /* Удалить отступ для последней кнопки */
+            }
+        }
+
+        .submit-button {
+            margin-top: 0;
+            background-color: #007bff; /* Цвет из изображения */
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 16px; /* Уменьшенный padding */
+            font-size: 14px; /* Уменьшенный шрифт */
+            cursor: pointer;
+        }
+
+        .submit-button:hover {
+            background-color: #b71c1c; /* Темный оттенок для эффекта наведения */
+        }
+
+        .quarter-title {
+            text-align: left; /* Выравнивание по левому краю */
+            font-size: 20px;
+            margin-top: 20px;
+            font-weight: bold;
+            margin-left: 250px; /* Отступ слева, чтобы текст совпадал с таблицей */
+        }
+
+        .filter-form {
+            display: flex; /* Расположение элементов формы в ряд */
+            align-items: center; /* Выравнивание по центру */
+            justify-content: center; /* Центрирование формы */
+            margin-bottom: 20px; /* Отступ снизу */
+        }
+
+        .filter-fields {
+            display: flex; /* Выравнивание полей в ряд */
+            align-items: center; /* Вертикальное выравнивание по центру */
+        }
+
+        .filter-fields .field-container {
+            display: flex;
+            align-items: center;
+            margin-right: 10px; /* Отступ между полями */
+        }
+
+        .filter-fields label {
+            margin-right: 5px; /* Отступ между меткой и полем ввода */
+        }
+
+        .submit-button {
+            margin-top: 0; /* Убираем верхний отступ */
+        }
+    </style>
+    <script>
+        function filterTable() {
+            const input = document.getElementById('search').value.toLowerCase();
+            const rows = document.querySelectorAll('#data-table tbody tr');
+
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                const fullName = `${cells[1].textContent.toLowerCase()} ${cells[2].textContent.toLowerCase()} ${cells[3].textContent.toLowerCase()}`;
+
+                if (fullName.includes(input)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        function groupAndSumScores() {
+            const rows = document.querySelectorAll('#data-table tbody tr');
+            const employeeData = {};
+
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                const lastName = cells[1].textContent;
+                const firstName = cells[2].textContent;
+                const middleName = cells[3].textContent;
+                const jobTitle = cells[4].textContent;
+                const score = parseInt(cells[6].textContent);
+
+                const key = `${lastName} ${firstName} ${middleName} ${jobTitle} ${department}`;
+
+                if (!employeeData[key]) {
+                    employeeData[key] = {
+                        lastName,
+                        firstName,
+                        middleName,
+                        jobTitle,
+                        department,
+                        totalScore: 0
+                    };
+                }
+
+                employeeData[key].totalScore += score;
+            });
+
+            // Convert the object to an array and sort by totalScore in descending order
+            const sortedEmployees = Object.values(employeeData).sort((a, b) => b.totalScore - a.totalScore);
+
+            // Clear existing rows
+            document.querySelector('#data-table tbody').innerHTML = '';
+
+            // Append sorted and grouped data to the table
+            sortedEmployees.forEach((employee, index) => {
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${employee.lastName}</td>
+                    <td>${employee.firstName}</td>
+                    <td>${employee.middleName}</td>
+                    <td>${employee.jobTitle}</td>
+                    <td>${employee.totalScore}</td>
+<!--                    <td>${employee.project_count}</td>-->
+                `;
+                document.querySelector('#data-table tbody').appendChild(newRow);
+            });
+        }
+
+        function updateDaysLeft() {
+            const targetDate = new Date('2024-06-27');
+            const currentDate = new Date();
+            const timeDiff = targetDate - currentDate;
+            const daysLeft = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+
+            const quarterTitle = document.querySelector('.quarter-title');
+            quarterTitle.textContent = `I квартал 2024 года. До защиты осталось ${daysLeft} дней!`;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            groupAndSumScores();
+            updateDaysLeft(); // Вызовите функцию здесь, чтобы обновить текст
+        });
+    </script>
+</head>
+<body>
+<h1>Рейтинг Новаторов</h1>
+<br>
+
+<div class="search-container">
+    <label for="search">Поиск по ФИО:</label>
+    <input type="text" id="search" oninput="filterTable()" placeholder="Введите Фамилию Имя Отчество">
+</div>
+
+<form method="get" class="filter-form">
+    {{ filter.form.non_field_errors }}
+    <div class="filter-fields">
+        {% for field in filter.form %}
+            <div class="field-container">
+                <label>{{ field.label_tag }}</label>
+                {{ field }}
+            </div>
+        {% endfor %}
+    </div>
+    <button type="submit" class="submit-button">Поиск</button>
+</form>
+
+<div class="quarter-title">
+    <!-- Текст будет обновлен JavaScript -->
+</div>
+
+<br>
+
+<div class="table-container">
+    <table id="data-table">
+        <thead>
+            <tr>
+                <th>№</th>
+                <th>Фамилия</th>
+                <th>Имя</th>
+                <th>Отчество</th>
+                <th>Должность</th>
+                <th>Количество баллов</th>
+                <th>Количество проектов</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for employee in employees %}
+            <tr>
+                <td data-label="№">{{ employee.row_number }}</td>
+                <td data-label="Фамилия">{{ employee.last_name }}</td>
+                <td data-label="Имя">{{ employee.first_name }}</td>
+                <td data-label="Отчество">{{ employee.middle_name }}</td>
+                <td data-label="Должность">{{ employee.job_title }}</td>
+                <td data-label="Количество баллов">{{ employee.total_score }}</td>
+                <td data-label="Количество проектов"> {{ employee.project_count }} </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<br>
+<div class="button-container">
+    <form action="{% url 'choice' %}">
+        <input type="submit" value="Отправить Заявку">
+    </form>
+    <form action="/admin/">
+        <input type="submit" value="Менеджер">
+    </form>
+    <form action="{% url 'home' %}">
+        <input type="submit" value="Таблица Участников">
+    </form>
+
+</div>
+
+</div>
+
+</body>
+</html>

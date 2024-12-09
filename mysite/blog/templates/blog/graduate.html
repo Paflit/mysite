@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Жюри</title>
+</head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 0;
+    }
+    .form-container {
+        max-width: 600px;
+        margin: 50px auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .form-container h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+    }
+    .form-container label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #333;
+    }
+    .form-container input[type="text"],
+    .form-container select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        color: #333;
+    }
+    .form-container input[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        background-color: #d32323; /* Цвет из изображения */
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    .form-container input[type="submit"]:hover {
+        background-color: #b71c1c; /* Темный оттенок для эффекта наведения */
+    }
+</style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Оценка проектов</h2>
+        <form method="post" action="/scoreaccept/">
+            {% csrf_token %}
+            <label for="fio">ФИО члена Жюри</label>
+            <input type="text" id="fio" name="fio" required>
+
+            <label for="name_project">Название проекта</label>
+            <input type="text" id="name_project" name="name_project" required>
+
+            <label for="category_project">Категория проекта</label>
+            <select id="category_project" name="category_project" required>
+                <option>Проект собственного авторства</option>
+                <option>Проект из базы ПД</option>
+            </select>
+
+            <label for="time_project">Длительность проекта</label>
+            <select id="time_project" name="time_project" required>
+                <option>до 12 месяцев</option>
+                <option>12-24 месяца</option>
+                <option>более 24</option>
+            </select>
+
+            <label for="crossfunction">Кроссфункциональность</label>
+            <select id="crossfunction" name="crossfunction" required>
+                <option>до 2</option>
+                <option>3-4</option>
+                <option>более 5</option>
+            </select>
+
+            <label for="company_partner">Количество компаний-партнеров</label>
+            <select id="company_partner" name="company_partner" required>
+                <option>только подразделения ОАО "РЖД"</option>
+                <option>подразделения ОАО "РЖД" и 1 компания-партнер</option>
+                <option>подразделения ОАО "РЖД" и 2 или более компании-партнеры</option>
+            </select>
+
+            <label for="budget">Бюджет и объём работ</label>
+            <select id="budget" name="budget" required>
+                <option>Без вложений</option>
+                <option>0-5 млн. рублей</option>
+                <option>более 5 млн. рублей</option>
+            </select>
+
+            <label for="volume_doc">Объём обрабатываемых документов</label>
+            <select id="volume_doc" name="volume_doc" required>
+                <option>до 10</option>
+                <option>10-20</option>
+                <option>более 20</option>
+            </select>
+
+            <label for="scalability">Возможность масштабирования</label>
+            <select id="scalability" name="scalability" required>
+                <option>Проект уровня ОАО "РЖД"</option>
+                <option>Проект федерального уровня</option>
+                <option>Проект международного уровня</option>
+            </select>
+
+            <label for="income_project">Доходы проекта</label>
+            <select id="income_project" name="income_project" required>
+                <option>до 1 млн. рублей</option>
+                <option>от 1 до 5 млн. рублей</option>
+                <option>более 5 млн. рублей</option>
+            </select>
+
+            <label for="tarif">Тариф полученный за период реализации</label>
+            <select id="tarif" name="tarif" required >
+                <option>до 10 млн. рублей</option>
+                <option>от 10 до 30 млн. рублей</option>
+                <option>более 30 млн. рублей</option>
+            </select>
+
+            <label for="timeline">Проект реализован в установленные сроки</label>
+            <select id="timeline" name="timeline" required >
+                <option>Нет</option>
+                <option>Да</option>
+            </select>
+
+            <label for="effect">Заявленный и согласованный эффект от проекта за 10 лет</label>
+            <select id="effect" name="effect" required >
+                <option>До 100 млн. руб</option>
+                <option>100-500 млн. руб</option>
+                <option>500 млн. руб - 1 млрд. руб</option>
+                <option>более 1 млрд. руб</option>
+            </select>
+
+            <label for="expert_score">Экспертная оценка</label>
+            <select id="expert_score" name="expert_score" required >
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+            </select>
+
+
+
+            <input type="submit" value="Отправить">
+        </form>
+    </div>
+</body>
+</html>

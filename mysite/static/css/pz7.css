@@ -1,0 +1,89 @@
+.first_letter p::first-letter{
+    font-size: 18pt;
+    color: red;
+    font-style: italic;
+}
+
+.first_line p::first-line{
+    color: red;
+    font-style: italic;
+}
+.highlight > p::selection{
+    background-color: green;
+    color: red;
+}
+#input1::placeholder {
+    color: green;
+}
+#input1:focus {
+    color: black;
+}
+#input2::placeholder {
+    background-color: green;
+    color: white;
+}
+#input2:focus {
+    background-color: transparent;
+    color: black;
+}
+
+.bef-aft > p::before {
+    content: 'Начало: ';
+    color:red
+}
+
+.bef-aft > p::after {
+    content: ' :Конец!';
+    color:green
+}
+
+
+.p-num {
+    counter-reset: paragraph;
+}
+.p-num > p::before {
+    content: "Абзац \2014  " counter(paragraph)". ";
+    counter-increment: paragraph;
+}
+ol li {
+    margin-bottom: 20px;
+}
+#input3:focus {
+    color: green;
+}
+#input4:focus {
+    border: none;
+    border-radius: 1px;
+    color: orange;
+    outline: 2px solid orange;
+}
+#input5:focus {
+    width: 300px;
+}
+.p-num-4 {
+    counter-reset: paragraph;
+}
+.p-num-4 > p::before {
+    counter-increment: paragraph;
+    content: "Абзац \2014  " counter(paragraph)". ";
+    color: green;
+}
+.p-num-4 > p:nth-child(4n+1) {
+    counter-reset: paragraph;
+}
+.p-num-4 > p:nth-child(4n+5) {
+    color: red;
+    font-weight: bold;
+}
+.ul1 li:nth-child(odd) {
+    color: red;
+}
+.ul1 li:nth-child(even) {
+    color: yellow;
+}
+.ul2 li:nth-child(odd) {
+    color: blue;
+}
+.ul2 li:nth-child(even) {
+    color: green;
+}
