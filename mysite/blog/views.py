@@ -6,6 +6,10 @@ from django.db.models import Sum, F, Window, Count
 from django.db.models.functions import RowNumber
 from django.db.models import Avg
 from .forms import UploadFileForm
+from django.shortcuts import render
+from django.core.mail import send_mail
+from django.http import HttpResponse
+from django.conf import settings
 
 from .filters import EmployeeFilter
 
@@ -162,9 +166,23 @@ def upload_file(request):
 def register_project(request):
     return render(request, 'blog/register_project.html')
 
+from django.shortcuts import render
+from django.core.mail import EmailMessage
+from django.http import HttpResponse
+from django.conf import settings
+from .models import Score_Self, Employee
+import os
+
 def register_accept(request):
     if request.method == 'POST':
         data = request.POST
+        uploaded_file = request.FILES.get('presentation')  # Получаем загруженный файл
+
+        # Проверка размера файла (до 5 МБ)
+        if uploaded_file and uploaded_file.size > 5 * 1024 * 1024:
+            return HttpResponse("Ошибка: размер файла превышает 5 МБ!")
+
+        # Получаем данные из формы
         name_project = data.get('name_project')
         project = data.get('project')
         category_project = data.get('category_project')
@@ -178,82 +196,34 @@ def register_accept(request):
         tarif = data.get('tarif')
         effect = data.get('effect')
         timeline = data.get('timeline')
-        category_project = data.get('category_project')
-        role_in_project = data.get('role_in_project')
-        time_project_points = 0
-        crossfunction_points = 0
-        company_partner_points = 0
-        budget_points = 0
-        if time_project == 'до 12 месяцев':
-            time_project_points += 1
-        elif time_project == '12-24 месяца':
-            time_project_points += 2
-        elif time_project == 'более 24':
-            time_project_points += 3
-        if crossfunction == 'до 2':
-            crossfunction_points += 1
-        elif crossfunction == '3-4':
-            crossfunction_points += 2
-        elif crossfunction == 'более 5':
-            crossfunction_points += 3
-        if company_partner == 'только подразделения ОАО "РЖД"':
-            company_partner_points += 1
-        elif company_partner == 'подразделения ОАО "РЖД" и 1 компания-партнер':
-            company_partner_points += 2
-        elif company_partner == 'подразделения ОАО "РЖД" и 2 или более компании-партнеры':
-            company_partner_points += 3
-        if budget == 'Без вложений':
-            budget_points += 1
-        elif budget == '0-5 млн. рублей':
-            budget_points += 2
-        elif budget == 'более 5 млн. рублей':
-            budget_points += 3
-        volume_doc_points = 0
-        if volume_doc == 'до 10':
-            volume_doc_points += 1
-        elif volume_doc == '10-20':
-            volume_doc_points += 2
-        elif volume_doc == 'более 20':
-            volume_doc_points += 3
-        scalability_points = 0
-        if scalability == 'Проект уровня ОАО "РЖД"':
-            scalability_points += 1
-        elif scalability == 'Проект федерального уровня':
-            scalability_points += 2
-        elif scalability == 'Проект международного уровня':
-            scalability_points += 3
-        income_project_ponts = 0
-        if income_project == 'до 1 млн. рублей':
-            income_project_ponts += 1
-        elif income_project == 'от 1 до 5 млн. рублей':
-            income_project_ponts += 2
-        elif income_project == 'более 5 млн. рублей':
-            income_project_ponts += 3
-        tarif_points = 0
-        if tarif == 'до 10 млн. рублей':
-            tarif_points += 1
-        elif tarif == 'от 10 до 30 млн. рублей':
-            tarif_points += 2
-        elif tarif == 'более 30 млн. рублей':
-            tarif_points += 3
+
+        # Подсчёт баллов
+        time_project_points = {'до 12 месяцев': 1, '12-24 месяца': 2, 'более 24': 3}.get(time_project, 0)
+        crossfunction_points = {'до 2': 1, '3-4': 2, 'более 5': 3}.get(crossfunction, 0)
+        company_partner_points = {
+            'только подразделения ОАО "РЖД"': 1,
+            'подразделения ОАО "РЖД" и 1 компания-партнер': 2,
+            'подразделения ОАО "РЖД" и 2 или более компании-партнеры': 3
+        }.get(company_partner, 0)
+        budget_points = {'Без вложений': 1, '0-5 млн. рублей': 2, 'более 5 млн. рублей': 3}.get(budget, 0)
+        volume_doc_points = {'до 10': 1, '10-20': 2, 'более 20': 3}.get(volume_doc, 0)
+        scalability_points = {
+            'Проект уровня ОАО "РЖД"': 1,
+            'Проект федерального уровня': 2,
+            'Проект международного уровня': 3
+        }.get(scalability, 0)
+        income_project_points = {'до 1 млн. рублей': 1, 'от 1 до 5 млн. рублей': 2, 'более 5 млн. рублей': 3}.get(income_project, 0)
+        tarif_points = {'до 10 млн. рублей': 1, 'от 10 до 30 млн. рублей': 2, 'более 30 млн. рублей': 3}.get(tarif, 0)
+
+        # Подсчёт итогового балла
         project_score = 0
         if category_project == 'Проект собственного авторства':
-            if timeline == 'Да':
-                project_score += 50
-            elif timeline == 'Нет':
-                project_score += 40
-            if effect == 'До 100 млн. руб':
-                project_score += 10
-            elif effect == '100-500 млн. руб':
-                project_score += 20
-            elif effect == '500 млн. руб - 1 млрд. руб':
-                project_score += 30
-            elif effect == 'более 1 млрд. руб':
-                project_score += 40
+            project_score += 50 if timeline == 'Да' else 40
+            effect_points = {'До 100 млн. руб': 10, '100-500 млн. руб': 20, '500 млн. руб - 1 млрд. руб': 30, 'более 1 млрд. руб': 40}
+            project_score += effect_points.get(effect, 0)
 
-            # Проверка, существует ли запись с таким именем проекта
+            # Проверка и сохранение записи
             if not Score_Self.objects.filter(project_name=name_project).exists():
-                # Если записи не существует, создаем новую
                 Score_Self.objects.create(
                     project_name=name_project,
                     project=project,
@@ -263,42 +233,60 @@ def register_accept(request):
                     budget_points=budget_points,
                     volume_doc_points=volume_doc_points,
                     scalability_points=scalability_points,
-                    income_project_ponts=income_project_ponts,
+                    income_project_ponts=income_project_points,
                     tarif_points=tarif_points
                 )
-        # elif category_project == 'Проект из базы ПД':
-        #     if timeline == 'Да':
-        #         project_score += 40
-        #     elif timeline == 'Нет':
-        #         project_score += 30
-        #     if effect == 'До 100 млн. руб':
-        #         project_score += 5
-        #     elif effect == '100-500 млн. руб':
-        #         project_score += 10
-        #     elif effect == '500 млн. руб - 1 млрд. руб':
-        #         project_score += 20
-        #     elif effect == 'более 1 млрд. руб':
-        #         project_score += 30
-        # Score.objects.create(project_name=name_project, fio = fio, score=summary_points, project_score = project_score)
 
-        # avg_score = Score.objects.filter(project_name=name_project).aggregate(avg_score=Avg('score'))['avg_score']
-        # average_score = Score.objects.filter(project_name=name_project).aggregate(avg_score=Avg('project_score'))['avg_score']
-        employees = Employee.objects.all().filter(project=name_project)
-        score_elem = Score_Self.objects.all().filter(project_name=name_project)
+        # Обновление баллов сотрудников
+        employees = Employee.objects.filter(project=name_project)
+        score_elem = Score_Self.objects.filter(project_name=name_project)
 
-        if project_score <= 14:
-            type_project = 'S'
-        elif project_score > 14 and project_score <= 17:
-            type_project = 'M'
-        elif project_score > 17:
-            type_project = 'L'
+        type_project = 'S' if project_score <= 14 else 'M' if project_score <= 17 else 'L'
+
         for employee in employees:
             employee.score = project_score + employee.personal_score
             employee.save()
         for elem in score_elem:
             elem.type_project = type_project
             elem.save()
-    return render(request, 'blog/score_accept.html')
+
+        # Формируем текст письма
+        message = f"""
+        Название проекта: {name_project}
+        Описание проекта: {project}
+        Итоговый балл проекта: {project_score}
+        Категория проекта: {category_project}
+        Время реализации: {time_project}
+        Кроссфункциональность: {crossfunction}
+        Компании-партнеры: {company_partner}
+        Бюджет: {budget}
+        Объём документов: {volume_doc}
+        Масштабирование: {scalability}
+        Доходы: {income_project}
+        Тариф: {tarif}
+        Эффект: {effect}
+        Сроки реализации: {timeline}
+        Тип проекта: {type_project}
+        """
+
+        # Отправка письма с вложением
+        email = EmailMessage(
+            subject=f"Новая заявка на проект: {name_project}",
+            body=message,
+            from_email=settings.EMAIL_HOST_USER,
+            to=['ya.gplnsk@gmail.com']
+        )
+
+        # Если есть загруженный файл, прикрепляем его
+        if uploaded_file:
+            email.attach(uploaded_file.name, uploaded_file.read(), uploaded_file.content_type)
+
+        email.send(fail_silently=False)
+
+        return HttpResponse("Заявка успешно обработана и отправлена на почту!")
+
+    return render(request, 'blog/register_accept.html')
+
 def handle_upload_file(f):
     with open(f"uploads/{f.name}", "wb+") as destination:
         for chunk in f.chunks():

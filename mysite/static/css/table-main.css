@@ -1,0 +1,251 @@
+/* Общий сброс отступов и полей */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Основные стили для шапки */
+.header {
+    background-color: #b81d2d;
+    width: 100%;
+    height: 90px;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.header .logo {
+    position: absolute;
+    left: 20px;
+    width: 130px;
+    height: auto;
+    animation-delay: 0.5s;
+}
+
+.header .header-text {
+    font-size: 32px;
+    color: white;
+    font-family: 'Arial', sans-serif;
+    animation-delay: 0.2s;
+    margin-left: 43%;
+}
+
+.header li {
+    list-style-type: none;
+}
+
+.header li a {
+    display: block;
+    width: 200px;
+    padding: 33px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 20px;
+    color: #fff;
+    transition: all 0.2s linear;
+    border-right: 1px solid #b81d2d;
+}
+
+.header li a:hover {
+    background: #cc0000;
+}
+
+.header li:first-child {
+    margin-left: 275%;
+    border-left: 1px solid #b81d2d;
+}
+
+/* Анимации для элементов */
+@keyframes slideDown {
+    0% {
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.fade-in {
+    opacity: 0;
+    animation: fadeIn 1s forwards;
+}
+
+/* Стили для поиска */
+.search-container {
+    text-align: center;
+    position: relative;
+}
+
+.search-container input {
+    width: 300px;
+    padding: 10px 35px 10px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.search-container input:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.search-container input::placeholder {
+    color: #aaa;
+    opacity: 1;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.search-container input:focus::placeholder {
+    transform: translateY(-10px);
+    opacity: 0.5;
+    font-size: 8px;
+}
+
+.search-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    max-width: 300px; /* Ограничение ширины для удобства */
+}
+
+.search-wrapper input {
+    width: 300px;
+    padding: 10px 40px 10px 10px; /* Пространство для иконки справа */
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.search-wrapper img {
+    position: absolute;
+    right: 10px; /* Отступ от правого края */
+    top: 40%;
+    transform: translateY(-50%);
+    width: 20px; /* Размер иконки */
+    height: 20px;
+    pointer-events: none; /* Отключает взаимодействие с иконкой */
+    opacity: 0.6; /* Легкая прозрачность */
+    transition: opacity 0.3s ease;
+}
+
+.search-wrapper input:focus + img {
+    opacity: 1; /* Увеличиваем прозрачность при фокусе */
+}
+
+/* Стили для кнопок */
+.button-container {
+    text-align: center;
+    margin-left: 33%;
+    display: flex;
+    position: absolute;
+}
+
+.button-container input, .button-container button {
+    display: inline-block;
+    margin: 0 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    color: #fff;
+    background-color: #b81d2d;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.button-container input:hover, .button-container button:hover {
+    background-color: #cc0000;
+}
+
+/* Стили для таблицы */
+.table-container {
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 600px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    background-color: #fff;
+    position: relative;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+}
+
+thead {
+    position: sticky;
+    top: -1px;
+    background-color: #960f1c;
+    z-index: 1;
+}
+
+/* Адаптивный дизайн */
+@media (max-width: 600px) {
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+
+    th {
+        display: none;
+    }
+
+    tr {
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        padding: 10px;
+        box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+        position: relative;
+    }
+
+    td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+    }
+
+    td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        width: calc(50% - 20px);
+        font-weight: bold;
+        text-align: left;
+        white-space: nowrap;
+    }
+
+    .table-container {
+        max-height: none;
+    }
+
+    .button-container form {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .button-container form:last-child {
+        margin-bottom: 0;
+    }
+}
+

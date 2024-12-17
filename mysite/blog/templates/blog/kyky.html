@@ -5,6 +5,17 @@
     <title>Заполнение Заявки</title>
 <!--    <link href="../../static/css/rating.css" rel="stylesheet">-->
     <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        textarea {
+            font-family: 'Arial', sans-serif;
+        }
+        
         .container {
             max-width: 500px;
             margin: 0 auto;
@@ -13,30 +24,57 @@
             border-radius: 5px;
             background-color: #f9f9f9;
         }
+
         .container label {
             display: block;
             margin-top: 10px;
         }
+
         .container input, .container textarea, .container datalist {
             width: 100%;
-            padding: 8px;
-            margin-top: 5px;
+            padding: 12px;
+            margin-top: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
+            transition: all 0.3s ease;
         }
+
+        .container input:focus {
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        .container input::placeholder {
+            color: #aaa;
+            opacity: 1;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .container input:focus::placeholder {
+            transform: translateY(-10px);
+            opacity: 0.5;
+            font-size: 12px;
+        }
+
         .container input[type="submit"] {
             margin-top: 20px;
             background-color: #4CAF50;
             color: white;
             border: none;
             cursor: pointer;
+            width: 400px;
+            padding: 10px 40px 10px 10px; /* Пространство для иконки справа */
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
         }
         .container input[type="submit"]:hover {
             background-color: #45a049;
         }
         .container input[type="submit"] {
-        margin-top: 20px;
+        margin-left: 50px;
         background-color: #d32323; /* Цвет из изображения */
         color: white;
         border: none;
@@ -46,6 +84,7 @@
         .container input[type="submit"]:hover {
         background-color: #b71c1c; /* Темный оттенок для эффекта наведения */
         }
+        
     </style>
 </head>
 <body>
@@ -53,50 +92,42 @@
 <div class="container">
     <form method="post" action="/accept/" onsubmit="return validateForm()">
     {% csrf_token %}
-    <label for="last_name">Фамилия:</label>
-    <input type="text" id="last_name" name="last_name" list="last_names" autocomplete="off" required>
-    <datalist id="last_names">
+    <input type="text" id="last_name" placeholder="Фамилия" name="last_name" list="last_names" autocomplete="off" required>
+    <!--<datalist id="last_names">
         {% for last_name in last_names %}
         <option value="{{ last_name }}">
         {% endfor %}
-    </datalist>
+    </datalist>-->
 
-    <label for="first_name">Имя:</label>
-    <input type="text" id="first_name" name="first_name" list="first_names" required>
-    <datalist id="first_names">
+    <input type="text" id="first_name" placeholder="Имя" name="first_name" list="first_names" required>
+    <!--<datalist id="first_names">
         {% for first_name in first_names %}
         <option value="{{ first_name }}">
         {% endfor %}
-    </datalist>
+    </datalist>-->
 
-    <label for="middle_name">Отчество:</label>
-    <input type="text" id="middle_name" name="middle_name" list="middle_names" required>
-    <datalist id="middle_names">
+    <input type="text" id="middle_name" placeholder="Отчество" name="middle_name" list="middle_names" required>
+    <!--<datalist id="middle_names">
         {% for middle_name in middle_names %}
         <option value="{{ middle_name }}">
         {% endfor %}
-    </datalist>
+    </datalist>-->
 
-
-    <label for="job_title">Должность:</label>
-<input type="text" id="job_title" name="job_title" list="job_titles" required>
+<input type="text" id="job_title" placeholder="Должность" name="job_title" list="job_titles" required>
 <datalist id="job_titles">
     {% for title in job_titles %}
     <option value="{{ title }}">
     {% endfor %}
 </datalist>
 
-    <label for="department">Подразделение:</label>
-    <input type="text" id="department" name="department" list="departments" required>
+    <input type="text" id="department" placeholder="Подразделение" name="department" list="departments" required>
     <datalist id="departments">
         {% for department in departments %}
         <option value="{{ department }}">
         {% endfor %}
     </datalist>
 
-
-    <label for="role_in_project">Роль в проекте:</label>
-    <input type="text" id="role_in_project" name="role_in_project" list="role_in_project0" required>
+    <input type="text" id="role_in_project" placeholder="Роль в проекте" name="role_in_project" list="role_in_project0" required>
     <datalist id="role_in_project0">
         <option>Лидер</option>
         <option>Участник</option>
@@ -104,8 +135,7 @@
         <option>Куратор</option>
     </datalist>
 
-    <label for="project">Проект:</label>
-    <textarea id="project" name="project" required></textarea>
+    <textarea id="project" name="project" placeholder="Проект" required></textarea>
 
     <input type="submit" value="Отправить">
 </form>

@@ -5,6 +5,19 @@
     <title>Заполнение Заявки</title>
 <!--    <link href="../../static/css/rating.css" rel="stylesheet">-->
     <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        textarea {
+            font-family: 'Arial', sans-serif;
+            padding: 10px;
+            margin-bottom: 7px;
+        }
+        
         .container {
             max-width: 500px;
             margin: 0 auto;
@@ -13,30 +26,51 @@
             border-radius: 5px;
             background-color: #f9f9f9;
         }
+
         .container label {
             display: block;
             margin-top: 10px;
         }
+
         .container input, .container textarea, .container datalist {
             width: 100%;
-            padding: 8px;
-            margin-top: 5px;
+            padding: 12px;
+            margin-top: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
+            transition: all 0.3s ease;
         }
+
+        .container input:focus {
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        .container input::placeholder {
+            color: #aaa;
+            opacity: 1;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
         .container input[type="submit"] {
             margin-top: 20px;
             background-color: #4CAF50;
             color: white;
             border: none;
             cursor: pointer;
+            width: 400px;
+            padding: 10px 40px 10px 10px; /* Пространство для иконки справа */
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
         }
         .container input[type="submit"]:hover {
             background-color: #45a049;
         }
         .container input[type="submit"] {
-        margin-top: 20px;
+        margin-left: 50px;
         background-color: #d32323; /* Цвет из изображения */
         color: white;
         border: none;
@@ -49,102 +83,100 @@
         select {
         width: 100%;
         padding: 10px;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
         border: 1px solid #ccc;
         border-radius: 4px;
         box-sizing: border-box;
         color: #333;
+        }
     </style>
 </head>
 <body>
 <h1><center>Заполните форму</center></h1>
 <div class="container">
-    <form method="post" action="/register_accept/" onsubmit="return validateForm()">
+    <form method="post" action="{% url 'register_accept' %}" enctype="multipart/form-data">
     {% csrf_token %}
-        <label for="name_project">Название проекта</label>
-            <input type="text" id="name_project" name="name_project" required>
-        <label for="project">Описание Проекта:</label>
-    <textarea id="project" name="project" required></textarea>
+            <input type="text" id="name_project" placeholder="Название проекта" name="name_project" required>
+    <textarea id="project" placeholder="Описание Проекта" name="project" required></textarea>
 
-            <label for="category_project">Категория проекта</label>
             <select id="category_project" name="category_project" required>
+                <option value="" disabled selected>Категория проекта</option>
                 <option>Проект собственного авторства</option>
                 <option>Проект из базы ПД</option>
             </select>
 
-            <label for="time_project">Длительность проекта</label>
             <select id="time_project" name="time_project" required>
+                <option value="" disabled selected>Длительность проекта</option>
                 <option>до 12 месяцев</option>
                 <option>12-24 месяца</option>
                 <option>более 24</option>
             </select>
 
-            <label for="crossfunction">Кроссфункциональность</label>
             <select id="crossfunction" name="crossfunction" required>
+                <option value="" disabled selected>Кроссфункциональность</option>
                 <option>до 2</option>
                 <option>3-4</option>
                 <option>более 5</option>
             </select>
 
-            <label for="company_partner">Количество компаний-партнеров</label>
             <select id="company_partner" name="company_partner" required>
+                <option value="" disabled selected>Количество компаний-партнеров</option>
                 <option>только подразделения ОАО "РЖД"</option>
                 <option>подразделения ОАО "РЖД" и 1 компания-партнер</option>
                 <option>подразделения ОАО "РЖД" и 2 или более компании-партнеры</option>
             </select>
 
-            <label for="budget">Бюджет и объём работ</label>
             <select id="budget" name="budget" required>
+                <option value="" disabled selected>Бюджет и объём работ</option>
                 <option>Без вложений</option>
                 <option>0-5 млн. рублей</option>
                 <option>более 5 млн. рублей</option>
             </select>
 
-            <label for="volume_doc">Объём обрабатываемых документов</label>
             <select id="volume_doc" name="volume_doc" required>
+                <option value="" disabled selected>Объём обрабатываемых документов</option>
                 <option>до 10</option>
                 <option>10-20</option>
                 <option>более 20</option>
             </select>
 
-            <label for="scalability">Возможность масштабирования</label>
             <select id="scalability" name="scalability" required>
+                <option value="" disabled selected>Возможность масштабирования</option>
                 <option>Проект уровня ОАО "РЖД"</option>
                 <option>Проект федерального уровня</option>
                 <option>Проект международного уровня</option>
             </select>
 
-            <label for="income_project">Доходы проекта</label>
             <select id="income_project" name="income_project" required>
+                <option value="" disabled selected>Доходы проекта</option>
                 <option>до 1 млн. рублей</option>
                 <option>от 1 до 5 млн. рублей</option>
                 <option>более 5 млн. рублей</option>
             </select>
 
-            <label for="tarif">Тариф полученный за период реализации</label>
             <select id="tarif" name="tarif" required >
+                <option value="" disabled selected>Тариф полученный за период реализации</option>
                 <option>до 10 млн. рублей</option>
                 <option>от 10 до 30 млн. рублей</option>
                 <option>более 30 млн. рублей</option>
             </select>
 
-            <label for="timeline">Проект реализован в установленные сроки</label>
             <select id="timeline" name="timeline" required >
+                <option value="" disabled selected>Проект реализован в установленные сроки</option>
                 <option>Нет</option>
                 <option>Да</option>
             </select>
 
-            <label for="effect">Заявленный и согласованный эффект от проекта за 10 лет</label>
             <select id="effect" name="effect" required >
+                <option value="" disabled selected>Заявленный и согласованный эффект от проекта за 10 лет</option>
                 <option>До 100 млн. руб</option>
                 <option>100-500 млн. руб</option>
                 <option>500 млн. руб - 1 млрд. руб</option>
                 <option>более 1 млрд. руб</option>
             </select>
 
-
-
-
+        <label for="presentation">Загрузить презентацию (только .pptx, до 5 МБ):</label>
+        <input type="file" id="presentation" name="presentation" accept=".pptx" required>
 
     <input type="submit" value="Отправить">
 
